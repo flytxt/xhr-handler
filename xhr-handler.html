@@ -107,7 +107,7 @@ Example:
       /**
        * Shows the loadMask.
        */
-      _showMask: function() {
+      _showMask: function(request) {
         if (!request.detail.options.headers.noMask) {
           this.$.loadMask.style.display = 'block';
         }
