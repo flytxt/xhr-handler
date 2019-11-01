@@ -64,6 +64,16 @@ Example:
         skipPatterns: {
           type: Object,
           value: {}
+        },
+
+        globalMaskCounter: {
+          type: Number,
+          value: 0
+        },
+
+        globalRequestCounter: {
+          type: Number,
+          value: 0
         }
       },
 
@@ -108,7 +118,9 @@ Example:
        * Shows the loadMask.
        */
       _showMask: function(request) {
+        this.globalRequestCounter += 1;
         if (!request.detail.options.headers.noMask) {
+          this.globalMaskCounter += 1;
           this.$.loadMask.style.display = 'block';
         }
       },
@@ -116,8 +128,14 @@ Example:
       /**
        * Hides the loadMask.
        */
-      _hideMask: function() {
-        this.$.loadMask.style.display = 'none';
+      _hideMask: function(request) {
+        this.globalRequestCounter = this.globalRequestCounter ? this.globalRequestCounter -= 1 : 0;
+        if (!_.get(request, 'detail.options.headers.noMask')) {
+          this.globalMaskCounter = this.globalMaskCounter ? this.globalMaskCounter -= 1 : 0;
+          if (!this.globalMaskCounter) {
+            this.$.loadMask.style.display = 'none';
+          }
+        }
       }
     });
   </script>
